@@ -34,7 +34,7 @@ jobs:
           NEXT_PUBLIC_UMAMI_WEBSITE_ID: ${{ vars.UMAMI_WEBSITE_ID }}
           NEXT_PUBLIC_ANALYTICS_HOSTNAME: ${{ vars.ANALYTICS_HOSTNAME }}
           NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with: {path: apps/web/out}
   deploy:
     needs: build
