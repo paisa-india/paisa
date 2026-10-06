@@ -1,0 +1,36 @@
+# Monthly: refresh city accounts from cityfinance.in when it reports new data (a full download takes a few hours).
+name: Update city accounts
+on:
+  schedule:
+    - cron: '0 21 1 * *'   # 1st of each month, 02:30 IST
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: data-update
+  cancel-in-progress: false
+jobs:
+  cities:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    env:
+      GH_TOKEN: ${{ secrets.DATA_BOT_TOKEN || github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.DATA_BOT_TOKEN || github.token }}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22, cache: npm}
+      - run: npm ci
+      - run: node --import tsx scripts/update-cities.ts
+      - run: npm run ingest && npm test
+      - name: Propose updated city data
+        run: |
+          if git diff --quiet -- data/cities.json; then echo "No change"; exit 0; fi
+          day=$(date -u +%F); branch="data/cities-$day"
+          git config user.name "paisa-data-bot"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"; git add data/cities.json data/published.json data/snapshots
+          git commit -m "City accounts update $day"; git push -u origin "$branch" --force
+          gh pr create --title "City accounts update $day" --body "Automated refresh from cityfinance.in. All checks passed." --label data-update || true
+          gh pr merge "$branch" --auto --squash || true

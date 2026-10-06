@@ -1,0 +1,32 @@
+{
+  "id": "bag7",
+  "url": "https://www.indiabudget.gov.in/doc/Budget_at_Glance/bag7.pdf",
+  "sha256": "c228be7fbd7bbe4e465a5dfff6f20fccf1b00045ef0de91ee5035660aef57414",
+  "path": "data/snapshots/c228be7fbd7bbe4e465a5dfff6f20fccf1b00045ef0de91ee5035660aef57414.pdf",
+  "retrievedAt": "2026-10-05T05:58:42.296926+00:00",
+  "httpMetadata": {
+    "Content-Type": "application/pdf",
+    "Last-Modified": "Sat, 31 Jan 2026 21:12:34 GMT",
+    "Accept-Ranges": "bytes",
+    "X-Content-Type-Options": "nosniff",
+    "Content-Security-Policy": "'unsafe-inline'  default-src 'self' style-src 'self' 'https://fonts.googleapis.com' font-src 'self' 'https://fonts.gstatic.com' frame-src youtube.com https://www.youtube.com facebook.com https://www.facebook.com twitter.com https://www.twitter.com https://playhls.media.nic.in https://platform.twitter.com;",
+    "Referrer-Policy": "strict-origin",
+    "Content-Length": "416572",
+    "Edge-Cache-Tag": "ub-doc-budget-at-glance-folder,ub-doc-folder,ub-pdf-ext",
+    "Expires": "Mon, 05 Oct 2026 05:58:42 GMT",
+    "Cache-Control": "max-age=0, no-cache, no-store",
+    "Pragma": "no-cache",
+    "Date": "Mon, 05 Oct 2026 05:58:42 GMT",
+    "Connection": "close",
+    "X-Frame-Options": "sameorigin",
+    "Strict-Transport-Security": "max-age=31536000 ; includeSubDomains"
+  },
+  "datasetVersion": "2026-27",
+  "parserVersion": "union-budget/1.0.0",
+  "license": {
+    "name": "Source-specific terms; review pending",
+    "redistributionAllowed": false,
+    "url": "https://www.indiabudget.gov.in/",
+    "attribution": "Ministry of Finance, Government of India. Union Budget 2026–27. PAISA is independent and is not endorsed by the Government of India."
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "cga",
+  "url": "https://cga.nic.in/writereaddata/MonthAccount/82026/DATA2627.htm",
+  "sha256": "0db8588796a711cc0f2d6f33603cc3f4de6db2bcaa52b2fe657013c24346be7a",
+  "path": "data/snapshots/0db8588796a711cc0f2d6f33603cc3f4de6db2bcaa52b2fe657013c24346be7a.html",
+  "retrievedAt": "2026-10-05T06:22:59.028Z",
+  "httpMetadata": {
+    "accept-ranges": "bytes",
+    "cache-control": "no-cache, no-store, must-revalidate",
+    "content-length": "130175",
+    "content-security-policy": "default-src 'self' 'unsafe-inline' 'unsafe-eval' ; script-src            'self' 'unsafe-inline' 'unsafe-eval' https://cga.gov.in/ https://cga.nic.in/ ; style-src 'self' 'unsafe-inline' 'unsafe-eval'  https://cga.gov.in/ https://cga.nic.in/; frame-src 'self'; img-src 'self' ",
+    "content-type": "text/html",
+    "date": "Mon, 05 Oct 2026 06:23:01 GMT",
+    "expires": "-1",
+    "feature-policy": "accelerometer 'none'; camera 'none'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; payment 'none'; usb 'none'",
+    "last-modified": "Wed, 30 Sep 2026 10:38:58 GMT",
+    "permissions-policy": "fullscreen=()",
+    "pragma": "no-cache",
+    "referrer-policy": "same-origin",
+    "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "sameorigin",
+    "x-xss-protection": "1; mode=block"
+  },
+  "datasetVersion": "April–August 2026 (provisional, unaudited)",
+  "parserVersion": "cga/1.0.0",
+  "license": {
+    "name": "Source-specific terms; review pending",
+    "url": "https://cga.nic.in/",
+    "redistributionAllowed": false,
+    "attribution": "Controller General of Accounts, Ministry of Finance, Government of India. Provisional unaudited monthly accounts. No government endorsement of PAISA."
+  }
+}

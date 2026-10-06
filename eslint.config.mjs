@@ -1,0 +1,2 @@
+import tseslint from 'typescript-eslint';
+export default tseslint.config({ignores:['node_modules/**','apps/web/.next/**','apps/web/out/**','apps/web/public/data/**','apps/web/next-env.d.ts','data/**','tmp/**']},...tseslint.configs.recommended,{rules:{'@typescript-eslint/no-empty-object-type':'off','@typescript-eslint/no-unused-vars':['error',{argsIgnorePattern:'^_',varsIgnorePattern:'^_'}],'no-empty':['error',{allowEmptyCatch:true}]}});

@@ -1,0 +1,39 @@
+# Optional: a weekly plain-language summary written by Claude from the week's update notes.
+# Runs only if the ANTHROPIC_API_KEY secret is set. Claude may only read files and open one issue;
+# it is told to use numbers exactly as written in data/changes (it never calculates or fetches figures).
+name: Weekly money update
+on:
+  schedule:
+    - cron: '30 3 * * 1'   # Monday 09:00 IST
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HAS_KEY: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+    steps:
+      - if: env.HAS_KEY != 'true'
+        run: echo "ANTHROPIC_API_KEY not set; skipping the AI summary."
+      - if: env.HAS_KEY == 'true'
+        uses: actions/checkout@v4
+      - if: env.HAS_KEY == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ github.token }}
+          claude_args: >-
+            --model claude-sonnet-5-5 --max-turns 8
+            --allowedTools "Read,Glob,Bash(gh issue create:*),Bash(ls:*),Bash(date:*)"
+          prompt: |
+            You are writing Paisa's weekly public-money update for ordinary readers in India.
+            Read the files in data/changes/ dated within the last 7 days (YYYY-MM-DD.md) and data/published.json only if needed for labels.
+            Write a short summary in simple English followed by the same in simple Hindi:
+            what new official figures arrived, what changed and by how much, which sources need attention.
+            Rules: copy every number exactly as it appears in those files; never calculate, estimate or round new numbers;
+            no opinions, no praise or blame of any government, party, official or company; say "no new official figures" if nothing changed.
+            Then open one GitHub issue titled "Weekly money update – <today's date>" with label-free body containing the summary,
+            using: gh issue create --title "..." --body "...".

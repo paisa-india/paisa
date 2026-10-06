@@ -1,0 +1,23 @@
+{
+  "id": "assam-ocds-civicdatalab",
+  "url": "https://raw.githubusercontent.com/CivicDataLab/assam-tenders-data/d98bb33467e890949025bfdcd526a715190a2d49/data/ProcessedData/ocds-mapped-data/current/ocds_mapped_data.json.zip",
+  "sha256": "c1f8de1058b0203d521d13423fe346d4011bfc824a27ac0f623c76c7de3a7019",
+  "path": "data/snapshots/c1f8de1058b0203d521d13423fe346d4011bfc824a27ac0f623c76c7de3a7019.zip",
+  "retrievedAt": "2026-10-05T10:21:06.491Z",
+  "httpMetadata": {
+    "commit": "d98bb33467e890949025bfdcd526a715190a2d49",
+    "commitDate": "2024-03-15T08:32:08Z",
+    "content-type": "application/zip"
+  },
+  "datasetVersion": "CivicDataLab Assam OCDS, commit d98bb33 (2024-03-15)",
+  "parserVersion": "assam-contracts/1.0.0",
+  "authority": "CivicDataLab, with the Finance Department, Government of Assam",
+  "title": "Assam public procurement · contract awards (OCDS)",
+  "retrieval": "Automatic: latest commit of the published open dataset. The data was compiled by CivicDataLab from the Assam e-tender portal; Paisa does not access that portal.",
+  "license": {
+    "name": "Open Data Commons Open Database License (ODbL) 1.0",
+    "url": "https://opendatacommons.org/licenses/odbl/1-0/",
+    "redistributionAllowed": true,
+    "attribution": "Assam Public Procurement Data, CivicDataLab (assam.open-contracting.in), compiled with the Finance Department, Government of Assam. ODbL 1.0. Derived contract data in Paisa is shared under ODbL. PAISA is independent and not endorsed by any government."
+  }
+}

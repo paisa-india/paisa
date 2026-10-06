@@ -1,0 +1,15 @@
+node_modules/
+.next/
+*.tsbuildinfo
+.env*
+!.env.example
+tmp/
+test-results/
+playwright-report/
+data/runs/
+data/alerts/
+data/inbox/
+apps/web/public/data/
+apps/web/out/
+.DS_Store
+data/.cache/

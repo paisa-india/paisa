@@ -1,0 +1,60 @@
+# Daily unattended data update.
+# - Checks every connected source (conditional requests, polite retries).
+# - Only validated data is published; a broken source keeps its last verified data.
+# - Changed data arrives as a pull request. With a DATA_BOT_TOKEN secret it merges itself once CI passes;
+#   without it, a maintainer merges with one click (GitHub-token PRs do not trigger CI).
+# - A broken source opens one GitHub issue (no duplicates).
+name: Update public data
+on:
+  schedule:
+    - cron: '30 2 * * *'   # 08:00 IST every day
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+concurrency:
+  group: data-update
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ secrets.DATA_BOT_TOKEN || github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.DATA_BOT_TOKEN || github.token }}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22, cache: npm}
+      - run: npm ci
+      - id: update
+        run: npm run update
+      - name: Re-check everything against the new data
+        if: steps.update.outputs.changed == 'true'
+        run: npm run typecheck && npm test
+      - name: Propose the verified data
+        if: steps.update.outputs.changed == 'true'
+        run: |
+          day=$(date -u +%F)
+          branch="data/update-$day"
+          git config user.name "paisa-data-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add data/published.json data/contracts.json data/projects.json data/cities.json data/snapshots data/changes data/*health.json
+          git commit -m "Data update $day"
+          git push -u origin "$branch" --force
+          gh label create data-update --color 2f7a64 --description "Automated verified data update" 2>/dev/null || true
+          gh pr create --title "Data update $day" --body-file data/alerts/last-run-summary.md --label data-update || echo "PR already exists"
+          gh pr merge "$branch" --auto --squash || echo "Auto-merge is off or not permitted; a maintainer will merge."
+      - name: Open an issue for each newly broken source or reminder
+        if: steps.update.outputs.alerts != ''
+        run: |
+          gh label create data-connector --color d79b54 --description "Connector health" 2>/dev/null || true
+          IFS=',' read -ra files <<< "${{ steps.update.outputs.alerts }}"
+          for f in "${files[@]}"; do
+            title=$(head -1 "data/alerts/$f" | sed 's/^# //')
+            existing=$(gh issue list --state open --label data-connector --search "in:title \"$title\"" --json number --jq '.[0].number')
+            if [ -z "$existing" ]; then gh issue create --title "$title" --body-file "data/alerts/$f" --label data-connector; fi
+          done

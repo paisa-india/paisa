@@ -1,0 +1,33 @@
+{
+  "id": "pmc-afs-2024-25",
+  "url": "https://adc-ecos.enlightcloud.com/1133pmcwebsitev2/s3fs-public/2025-12/Financial-Statements-2024-25.pdf?VersionId=f4cf885d-819e-4bdf-ae64-72639ff4eec7",
+  "sha256": "2272bb26fd023e6e42e77e018884464f9c7448dd2a3035d7036ecd2c16c962e6",
+  "path": "data/snapshots/2272bb26fd023e6e42e77e018884464f9c7448dd2a3035d7036ecd2c16c962e6.pdf",
+  "retrievedAt": "2026-10-05T06:48:32.000Z",
+  "httpMetadata": {
+    "accept-ranges": "bytes",
+    "content-length": "4886729",
+    "content-type": "application/pdf",
+    "etag": "\"aafab76d6592dffe1fc40b52a112aba5\"",
+    "last-modified": "Wed, 10 Dec 2025 12:46:00 GMT",
+    "server": "MinIO",
+    "strict-transport-security": "max-age=31536000; includeSubDomains",
+    "vary": "Accept-Encoding",
+    "x-amz-id-2": "48b81a40de9dd78250db6e06d84c262ee47a2b3b91e98b958da2617bc467a094",
+    "x-amz-request-id": "18DB8F5E66ADF697",
+    "x-content-type-options": "nosniff",
+    "x-xss-protection": "1; mode=block",
+    "x-amz-version-id": "f4cf885d-819e-4bdf-ae64-72639ff4eec7",
+    "date": "Mon, 05 Oct 2026 06:48:32 GMT"
+  },
+  "datasetVersion": "Audited financial statements FY 2024-25 (audit completed 29 Sep 2025)",
+  "parserVersion": "pmc-accounts/1.0.0",
+  "authority": "Pune Municipal Corporation",
+  "title": "PMC · Audited annual accounts 2024–25",
+  "license": {
+    "name": "Source-specific terms; review pending",
+    "url": "https://www.pmc.gov.in/en/b/website-policies",
+    "redistributionAllowed": false,
+    "attribution": "Pune Municipal Corporation. Audited Financial Statements FY 2024-25 (filed under SEBI LODR Regulation 52). PAISA is independent and is not endorsed by Pune Municipal Corporation or any government."
+  }
+}

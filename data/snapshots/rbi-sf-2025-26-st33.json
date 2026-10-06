@@ -1,0 +1,19 @@
+{
+  "id": "rbi-sf-2025-26-st33",
+  "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/33_ST23012026BCEB3D627A5F437FB20248AF4A6A7AD7.XLSX",
+  "sha256": "e004831ffe2a9fa2a96767680351a32508d26be60ee3ad7c798f937af2a5d9ff",
+  "path": "data/snapshots/e004831ffe2a9fa2a96767680351a32508d26be60ee3ad7c798f937af2a5d9ff.xlsx",
+  "retrievedAt": "2026-10-05T09:12:40.803Z",
+  "httpMetadata": {},
+  "datasetVersion": "State Finances: A Study of Budgets of 2025-26 (published January 2026)",
+  "parserVersion": "rbi-state-finances/1.0.0",
+  "authority": "Reserve Bank of India",
+  "title": "RBI · State Finances 2025-26 · Statement 33 (revenue receipts)",
+  "retrieval": "Manual browser download by a maintainer. RBI serves a bot challenge to scripted requests.",
+  "license": {
+    "name": "Source-specific terms; review pending",
+    "url": "https://rbi.org.in/Scripts/AnnualPublications.aspx?head=State+Finances+%3A+A+Study+of+Budgets",
+    "redistributionAllowed": false,
+    "attribution": "Reserve Bank of India, State Finances: A Study of Budgets of 2025-26. Source: budget documents of the State governments. PAISA is independent and is not endorsed by RBI or any government."
+  }
+}

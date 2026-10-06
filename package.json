@@ -1,0 +1,51 @@
+{
+  "name": "paisa",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "scripts": {
+    "dev": "npm run data:export && next dev apps/web --hostname 127.0.0.1",
+    "build": "npm run data:export && next build apps/web",
+    "start": "next start apps/web --hostname 127.0.0.1",
+    "api": "node --import tsx apps/api/server.ts",
+    "worker": "node --import tsx apps/workers/run.ts",
+    "ingest": "node --import tsx scripts/ingest.ts",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "check": "npm run lint && npm run typecheck && npm test && npm run build",
+    "update": "node --import tsx scripts/update.ts",
+    "data:export": "node --import tsx scripts/export-static.ts",
+    "build:static": "npm run data:export && STATIC_EXPORT=1 next build apps/web",
+    "preview:static": "npx --yes serve apps/web/out -l 3200",
+    "check:size": "node --import tsx scripts/check-size.ts"
+  },
+  "dependencies": {
+    "@fastify/rate-limit": "^10.3.0",
+    "@fontsource/dm-sans": "^5.3.0",
+    "@fontsource/manrope": "^5.3.0",
+    "bullmq": "^5.0.0",
+    "fastify": "5.12.5",
+    "lucide-react": "^0.468.0",
+    "next": "16.3.8",
+    "pdfjs-dist": "^6.4.299",
+    "pg": "^8.13.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^10.12.0",
+    "mapshaper": "^0.7.76",
+    "prettier": "^3.9.9",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.71.0"
+  }
+}

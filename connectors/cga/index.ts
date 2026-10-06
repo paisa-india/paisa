@@ -1,0 +1,11 @@
+import type {MoneyRecord,Source} from '../../packages/schema/index';
+export function parseCga(raw:Uint8Array,source:Source):MoneyRecord[]{
+ const text=new TextDecoder('windows-1252').decode(raw).replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/g,' ').replace(/\s+/g,' ');
+ const header=/AS AT THE END OF ([A-Z]+) (20\d{2})/.exec(text);if(!header||!text.includes('2026-2027'))throw new Error('CGA reporting period/schema changed');
+ const period=`April–${header[1][0]+header[1].slice(1).toLowerCase()} ${header[2]} (provisional, unaudited)`;
+ const specs=[['revenue-receipts','Revenue Receipts','Revenue receipts','राजस्व प्राप्तियां'],['net-tax','Tax Revenue \\(Net\\)','Net tax revenue','निवल कर राजस्व'],['non-tax','Non-Tax Revenue','Non-tax revenue','गैर-कर राजस्व'],['loan-recovery','Recovery of Loans','Loan recovery','ऋण वसूली'],['other-receipts','Other Receipts','Other non-debt receipts','अन्य ऋण-भिन्न प्राप्तियां'],['total-receipts','Total Receipts \\(1\\+4\\)','Non-debt receipts','ऋण-भिन्न प्राप्तियां'],['revenue-expenditure','Revenue Expenditure','Revenue expenditure','राजस्व व्यय'],['capital-expenditure','Capital Expenditure','Capital expenditure','पूंजीगत व्यय'],['total-expenditure','Total Expenditure \\(8\\+10\\)','Total expenditure','कुल व्यय']];
+ const records=specs.map(([metric,pattern,label,labelHi])=>{const m=new RegExp(pattern+'(?: \\(Details\\))?\\s+(\\d+)\\s+(\\d+)').exec(text);if(!m)throw new Error(`CGA row missing: ${metric}`);return {id:`cga:${metric}:2026-27:ACTUAL`,metric,label,labelHi,group:'overview' as const,fiscalYear:'2026-27',valueType:'ACTUAL' as const,amountRupees:(BigInt(m[2])*10000000n).toString(),sourceId:source.id,snapshotHash:source.sha256,sourcePage:1,rawValue:m[2],rawUnit:'crore' as const,parserVersion:'cga/1.0.0',retrievedAt:source.retrievedAt,status:'PUBLISHED' as const,period,notes:'Unaudited provisional Union Government accounts. Current-year cumulative values; not full-year actuals.'};});
+ const get=(m:string)=>BigInt(records.find(r=>r.metric===m)!.amountRupees);
+ if(get('revenue-expenditure')+get('capital-expenditure')!==get('total-expenditure')||get('net-tax')+get('non-tax')!==get('revenue-receipts')||get('revenue-receipts')+get('loan-recovery')+get('other-receipts')!==get('total-receipts'))throw new Error('CGA reconciliation failed');
+ return records;
+}

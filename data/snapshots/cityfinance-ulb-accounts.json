@@ -1,0 +1,21 @@
+{
+  "id": "cityfinance-ulb-accounts",
+  "url": "https://www.cityfinance.in/municipal-data/national",
+  "sha256": "e91ebb861970c0c108e80dee997f0498cd8ac66c905c8d80e53a8a5c6338825a",
+  "path": "data/snapshots/e91ebb861970c0c108e80dee997f0498cd8ac66c905c8d80e53a8a5c6338825a.jsonl.gz",
+  "retrievedAt": "2026-10-05T20:24:33.834Z",
+  "httpMetadata": {
+    "endpoint": "https://www.cityfinance.in/api/v1/dashboard/city/bs-is (one request per city)"
+  },
+  "datasetVersion": "cityfinance.in standardised annual accounts, FY 2015-16 to 2023-24",
+  "parserVersion": "cityfinance/1.0.0",
+  "authority": "Ministry of Housing and Urban Affairs (cityfinance.in, managed by Janaagraha)",
+  "title": "cityfinance.in · city income & expenditure",
+  "retrieval": "Automatic: the public data API behind cityfinance.in city dashboards (no login), one request per city per second.",
+  "license": {
+    "name": "Source-specific terms; permission requested",
+    "url": "https://www.cityfinance.in/",
+    "redistributionAllowed": false,
+    "attribution": "Municipal finance data: cityfinance.in, Ministry of Housing and Urban Affairs, Government of India (standardised from cities’ annual accounts). PAISA is independent and not endorsed by any government."
+  }
+}

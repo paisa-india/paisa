@@ -1,0 +1,12 @@
+Paisa
+Copyright (C) 2026 Amar Rokade and Paisa contributors
+
+This program is free software: you can redistribute it and/or modify it under the terms of the
+GNU Affero General Public License version 3 (AGPL-3.0-only). See LICENSE.
+
+Data in this repository is NOT covered by the AGPL. Each source keeps its own licence or terms;
+see DATA_LICENSES.md. Paisa is independent and is not affiliated with or endorsed by any government.
+
+Third-party data notices:
+- State boundaries: DataMeet India community, CC BY 4.0.
+- Assam Public Procurement Data: CivicDataLab with the Finance Department, Government of Assam, ODbL 1.0.

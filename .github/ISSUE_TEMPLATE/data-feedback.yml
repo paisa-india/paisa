@@ -1,0 +1,37 @@
+name: Data error or missing official source
+description: Tell us about a wrong number, a broken link, or an official document Paisa should use.
+title: "Data: "
+labels: [data-feedback]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping. Paisa only publishes figures from official or openly licensed documents.
+        **Please do not post accusations against named people or companies.** To report suspected wrongdoing, use official channels: the Central Vigilance Commission (cvc.gov.in), your state Lokayukta, RTI, or the police.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is this about?
+      options:
+        - A number looks wrong
+        - A source link is broken or outdated
+        - Here is an official document Paisa should use
+        - Something is hard to understand
+        - Other
+    validations: {required: true}
+  - type: input
+    id: page
+    attributes:
+      label: Which page or place?
+      placeholder: e.g. Projects → Maharashtra, or the contractor's page
+  - type: input
+    id: source
+    attributes:
+      label: Link to the official document (if any)
+      placeholder: https://… (government or open-data site)
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: What did you expect, and what does the document say? Page numbers help.
+    validations: {required: true}
