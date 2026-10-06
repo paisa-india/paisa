@@ -9,6 +9,7 @@ import path from 'node:path';
 import {readDataset,readContracts,readProjects} from '../packages/db/repository';
 import {buildSignals,buildStatus} from '../apps/api/service';
 import {geographies} from '../packages/schema/index';
+import {citySlugs} from '../packages/query/places';
 const out=path.resolve('apps/web/public/data');await mkdir(out,{recursive:true});
 const write=async(name:string,value:unknown)=>{await writeFile(path.join(out,name),JSON.stringify(value));};
 const dataset=await readDataset();const contracts=await readContracts();const projects=await readProjects();const signals=await buildSignals();
@@ -25,10 +26,11 @@ try{
  // The India view shows only big cities with accounts; each state's full list loads with that state.
  await write('cities-major.json',{cities:index.filter(c=>c.ys>0&&(c.p??0)>=1000000)});
  // Every state gets a file (empty when cityfinance lists no city there), so a missing file always means a failed download.
+ const pages=citySlugs(cf.cities);// the address of each city's page
  const byState=new Map<string,City[]>(geographies.filter(g=>g.parentId==='india').map(g=>[g.id,[]]));for(const c of cf.cities){if(!c.stateId)continue;const l=byState.get(c.stateId)??[];l.push(c);byState.set(c.stateId,l);}
  // Per state: a light list for the map dots, and the yearly accounts in 8 small files loaded when a city is opened.
  for(const [s,list] of byState){
-  await write(`cities/${s}.json`,{source:cf.source,cities:list.map(({years,...c})=>({...c,years:{},ys:Object.keys(years).length}))});
+  await write(`cities/${s}.json`,{source:cf.source,cities:list.map(({years,...c})=>({...c,years:{},ys:Object.keys(years).length,pg:pages.get(c.id)}))});
   await mkdir(path.join(out,'cities',s),{recursive:true});const parts:Record<string,unknown>[]=Array.from({length:8},()=>({}));
   for(const c of list)if(Object.keys(c.years).length)parts[shardOf(c.id)%8][c.id]=c.years;
   for(let i=0;i<8;i++)await write(`cities/${s}/${i}.json`,parts[i]);

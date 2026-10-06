@@ -25,6 +25,12 @@ The live site is <https://paisa-india.github.io/paisa/>. A fork needs the same s
 1. **Optional:** the **`ANTHROPIC_API_KEY`** secret, for the weekly AI summary. Set a monthly spend limit in the Anthropic console.
 1. **Optional:** the **`DATA_GOV_IN_API_KEY`** secret, for connectors that read data.gov.in. Locally, put it in `.env` (never committed).
 
+### Search engines
+
+- Every state and every city with accounts has its own plain-HTML page (`/places/<state>/<city>/`), listed in `/sitemap.xml` with its own title, description, canonical link and structured data. `npm run test:browser` fails if any of this breaks.
+- **Google Search Console:** add the site as a URL-prefix property, choose the *HTML tag* method, and copy only the `content` value into the repository variable `GOOGLE_SITE_VERIFICATION` (Settings → Secrets and variables → Actions → Variables). Re-run *Publish site*, press *Verify*, then submit `sitemap.xml` under *Sitemaps*.
+- **Custom domain:** point a CNAME record at `<org>.github.io`, set it under Settings → Pages, enable *Enforce HTTPS*, and set the variable `SITE_URL` to the new address (for example `https://paisa.example.org`). The base path, canonical links and sitemap follow automatically. On a github.io project site, crawlers read `robots.txt` only at the domain root, so it takes effect only on a custom domain.
+
 ### Who can merge what
 
 | Who | Can merge? | Notes |

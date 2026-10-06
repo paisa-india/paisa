@@ -1,0 +1,2 @@
+/** "Greater Chennai Corporation" → "Greater Chennai", "Nagpur Municipal Corporation" → "Nagpur". The full official name is shown below. */
+export const shortCityName=(n:string)=>n.trim().replace(/^(Municipal\s+)?(Corporation|Municipality|Council)\s+of\s+/i,'').replace(/\s+(City\s+)?(Municipal\s+)?(Corporation|Council)$|\s+(Municipality|Nagar\s+Panchayat|Nagar\s+Parishad|Town\s+Panchayat|Nagar\s+Palika(\s+Parishad)?|Nagar\s+Nigam|Cantonment\s+Board|Notified\s+Area\s+Council)$/i,'')||n;

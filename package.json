@@ -17,7 +17,7 @@
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
     "update": "node --import tsx scripts/update.ts",
     "data:export": "node --import tsx scripts/export-static.ts",
-    "build:static": "npm run data:export && STATIC_EXPORT=1 next build apps/web",
+    "build:static": "npm run data:export && STATIC_EXPORT=1 next build apps/web && node --import tsx scripts/prune-export.ts",
     "preview:static": "npx --yes serve apps/web/out -l 3200",
     "check:size": "node --import tsx scripts/check-size.ts",
     "test:browser": "playwright test"

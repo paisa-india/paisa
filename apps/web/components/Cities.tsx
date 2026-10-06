@@ -6,10 +6,9 @@ import {formatMoney} from '../../../packages/calculations/index';
 import {loadJson} from '../lib/static-data';
 import {shardOf} from '../../../packages/query/shard';
 export type IndexCity={id:string;n:string;s:string|null;lat:number;lng:number;p:number|null;t:string;ys:number;l:{y:string;ti:string;te:string}|null};
-type CityIndex={cities:IndexCity[]};export type LightCity=City&{ys:number};type StateCities={source:Source;cities:LightCity[]};
+type CityIndex={cities:IndexCity[]};export type LightCity=City&{ys:number;pg?:string};type StateCities={source:Source;cities:LightCity[]};
 export const PUNE_CITYFINANCE_ID='5eb5844f76a3b61f40ba0694';
-/** "Greater Chennai Corporation" → "Greater Chennai", "Nagpur Municipal Corporation" → "Nagpur". The full official name is shown below. */
-export const shortCityName=(n:string)=>n.trim().replace(/\s+(City\s+)?(Municipal\s+)?(Corporation|Council)$|\s+(Municipality|Nagar\s+Panchayat|Nagar\s+Parishad|Town\s+Panchayat|Nagar\s+Palika(\s+Parishad)?|Nagar\s+Nigam|Cantonment\s+Board|Notified\s+Area\s+Council)$/i,'')||n;
+export {shortCityName} from '../lib/city-names';
 /** English/Hindi names for NMAM line-item codes (the official names are shown in the source panel). */
 export const NMAM:Record<string,[string,string]>={'110':['Tax revenue','कर राजस्व'],'120':['Assigned revenues & compensation','हस्तांतरित राजस्व और क्षतिपूर्ति'],'130':['Rental income from municipal properties','नगर संपत्तियों से किराया'],
  '140':['Fees & user charges','शुल्क और उपयोगकर्ता प्रभार'],'150':['Sale & hire charges','बिक्री और किराया प्रभार'],'160':['Revenue grants, contributions & subsidies','राजस्व अनुदान, अंशदान और सब्सिडी'],
