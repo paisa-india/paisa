@@ -147,3 +147,11 @@ test('a late project shows its original and revised dates on a timeline',async({
  await page.locator('#projects').getByRole('button',{name:'Running late'}).click();const card=page.locator('.project-card').first();
  await expect(card.locator('.timeline .tl-late')).toBeVisible();await expect(card.locator('.tl-labels .struck')).toBeVisible();await expect(card.locator('.tl-report')).toContainText('Report');
 });
+
+test('every page loads without errors in the console (including hydration mismatches)',async({page})=>{
+ for(const path of ['/','/explore/','/my-tax/','/projects/','/contracts/','/contractors/','/signals/','/sources/','/about/']){
+  const errs:string[]=[];const onErr=(e:Error)=>errs.push(e.message);const onCon=(m:import('@playwright/test').ConsoleMessage)=>{if(m.type()==='error')errs.push(m.text());};
+  page.on('pageerror',onErr);page.on('console',onCon);await page.goto(path);await page.waitForTimeout(800);page.off('pageerror',onErr);page.off('console',onCon);
+  expect(errs,`${path}`).toEqual([]);
+ }
+});
