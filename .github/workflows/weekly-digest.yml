@@ -19,7 +19,7 @@ jobs:
       - if: env.HAS_KEY != 'true'
         run: echo "ANTHROPIC_API_KEY not set; skipping the AI summary."
       - if: env.HAS_KEY == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - if: env.HAS_KEY == 'true'
         uses: anthropics/claude-code-action@v1
         with:

@@ -23,7 +23,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.DATA_BOT_TOKEN || github.token }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           token: ${{ secrets.DATA_BOT_TOKEN || github.token }}
       - uses: actions/setup-node@v4
