@@ -22,7 +22,7 @@ jobs:
         with: {node-version: 22, cache: npm}
       - run: npm ci
       - id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Build static site
         run: npm run build:static
         env:
