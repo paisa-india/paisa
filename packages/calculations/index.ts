@@ -19,3 +19,8 @@ export function formatMoney(rupees:string,compact=true):string{
  return `₹${n.toLocaleString('en-IN')}`;
 }
 export function formatPaise(n:bigint):string{return `₹${(n/100n).toLocaleString('en-IN')}.${(n%100n).toString().padStart(2,'0')}`;}
+/** Indian fiscal year (April–March) of an ISO date: 2021-05-03 → "2021-22", 2022-02-10 → "2021-22". */
+export function fiscalYearOf(iso:string|null|undefined){
+ const m=iso?/^(\d{4})-(\d{2})/.exec(iso):null;if(!m)return null;const y=Number(m[1]),start=Number(m[2])>=4?y:y-1;
+ return `${start}-${String((start+1)%100).padStart(2,'0')}`;
+}

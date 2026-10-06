@@ -7,9 +7,9 @@ import {CHECKS,type ContractColumns} from '../../../packages/query/shard';
 import type {Contractor,Contract,Source} from '../../../packages/schema/index';
 type ContractList={source:Source;excluded:ContractsFile['excluded'];prefix:string;buyers:string[];cols:ContractColumns};
 let contractsFile:Promise<ContractsFile>|null=null;
-/** Rebuilds contract records from the compact list. Record-level details (OCID, raw value…) are fetched per shard when opened. */
+/** Rebuilds contract records from the compact list (a failed download is retried on the next call). Record-level details (OCID, raw value…) are fetched per shard when opened. */
 function loadContracts(){return contractsFile??=Promise.all([loadJson<ContractList>('contracts-list.json'),loadJson<{contractors:Contractor[]}>('contractors.json')]).then(([l,k])=>({status:'PUBLISHED',publishedAt:'',source:l.source,snapshotHash:l.source.sha256,parserVersion:l.source.parserVersion,excluded:l.excluded,validations:[],contractors:k.contractors,
- contracts:l.cols.id.map((sid,i):Contract=>{const k_=k.contractors[l.cols.contractor[i]];return {id:l.prefix+sid,ocid:'',tenderId:'',title:l.cols.title[i],buyer:l.buyers[l.cols.buyer[i]],location:l.cols.location[i],category:null,method:null,tenderPublished:l.cols.date[i],estimatePaise:l.cols.estimate[i],awardPaise:l.cols.award[i],rawAward:'',bidders:l.cols.bidders[i],contractorId:k_.id,contractorName:k_.name,valueCheck:CHECKS[l.cols.check[i]],geographyId:'assam',sourceId:l.source.id};})}) as ContractsFile);}
+ contracts:l.cols.id.map((sid,i):Contract=>{const k_=k.contractors[l.cols.contractor[i]];return {id:l.prefix+sid,ocid:'',tenderId:'',title:l.cols.title[i],buyer:l.buyers[l.cols.buyer[i]],location:l.cols.location[i],category:null,method:null,tenderPublished:l.cols.date[i],estimatePaise:l.cols.estimate[i],awardPaise:l.cols.award[i],rawAward:'',bidders:l.cols.bidders[i],contractorId:k_.id,contractorName:k_.name,valueCheck:CHECKS[l.cols.check[i]],geographyId:'assam',sourceId:l.source.id};})}) as ContractsFile).catch(e=>{contractsFile=null;throw e;});}
 type Signals={coverage:string;sources:unknown[];records:LiveSignal[];counts:Record<string,number>};
 /** Answers the site's /api/v1 requests in the browser from static files, using the same query code as the API server. */
 export async function staticApi<T=unknown>(url:string):Promise<T>{

@@ -42,7 +42,7 @@ npm run check      # must pass before a pull request: lint, typecheck, tests, bu
 
 - Money is stored as integer rupees or paise in decimal strings, never as floating point.
 - Match the existing code style. Keep user-facing text in plain language, in both English and Hindi.
-- Changes go through pull requests; `main` is protected and requires passing CI and a maintainer review.
+- Changes go through pull requests. `main` is protected: CI must pass, and only maintainers can merge. A first-time contributor's checks start once a maintainer approves them.
 
 ## Commits
 

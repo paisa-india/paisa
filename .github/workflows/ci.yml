@@ -19,3 +19,5 @@ jobs:
       - run: npm test
       - run: npm run build:static
       - run: npm run check:size
+      - name: Browser tests (what a visitor sees)
+        run: npx playwright install --with-deps chromium && npm run test:browser

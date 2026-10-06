@@ -22,17 +22,17 @@ export function useCityIndex(){
  useEffect(()=>{loadJson<CityIndex>('cities-major.json').then(setIndex).catch(()=>setIndex(null));},[]);
  return index;
 }
-/** One city with its yearly accounts (loaded from the state's small detail file on demand). */
+/** One city with its yearly accounts (loaded from the state's small detail file on demand). A failed download is reported, never shown as "no accounts". */
 export function useCity(stateId:string|null,light:LightCity|null){
- const [city,setCity]=useState<City|null>(null);
- useEffect(()=>{if(!light||!stateId){setCity(null);return;}if(!light.ys){setCity(light);return;}let live=true;setCity(null);
-  loadJson<Record<string,City['years']>>(`cities/${stateId}/${shardOf(light.id)%8}.json`).then(d=>{if(live)setCity({...light,years:d[light.id]??{}});}).catch(()=>{if(live)setCity({...light,years:{}});});return()=>{live=false;};},[stateId,light]);
- return city;
+ const [city,setCity]=useState<City|null>(null),[failed,setFailed]=useState(false),[attempt,setAttempt]=useState(0);
+ useEffect(()=>{setFailed(false);if(!light||!stateId){setCity(null);return;}if(!light.ys){setCity(light);return;}let live=true;setCity(null);
+  loadJson<Record<string,City['years']>>(`cities/${stateId}/${shardOf(light.id)%8}.json`).then(d=>{if(live)setCity({...light,years:d[light.id]??{}});}).catch(()=>{if(live)setFailed(true);});return()=>{live=false;};},[stateId,light,attempt]);
+ return {city,failed,retry:()=>setAttempt(a=>a+1)};
 }
 export function useStateCities(stateId:string|null){
- const [file,setFile]=useState<StateCities|null>(null);
- useEffect(()=>{if(!stateId){setFile(null);return;}let live=true;loadJson<StateCities>(`cities/${stateId}.json`).then(f=>{if(live)setFile(f);}).catch(()=>{if(live)setFile(null);});return()=>{live=false;};},[stateId]);
- return file;
+ const [file,setFile]=useState<StateCities|null>(null),[failed,setFailed]=useState(false),[attempt,setAttempt]=useState(0);
+ useEffect(()=>{setFailed(false);setFile(null);if(!stateId)return;let live=true;loadJson<StateCities>(`cities/${stateId}.json`).then(f=>{if(live)setFile(f);}).catch(()=>{if(live)setFailed(true);});return()=>{live=false;};},[stateId,attempt]);
+ return {file,failed,retry:()=>setAttempt(a=>a+1)};
 }
 /** A city-year as Paisa money records, so the shared cards, story and source panel can display it with provenance. */
 export function cityRecords(city:City,year:string,source:Source):MoneyRecord[]{

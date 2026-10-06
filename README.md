@@ -4,6 +4,8 @@
 
 Every number on the site comes from an official or openly licensed document and links back to it (file, page, hash and checks). Paisa never guesses a missing figure, and it never accuses anyone. Automated **signals** are observations, not findings of wrongdoing.
 
+**Live site: <https://paisa-india.github.io/paisa/>**
+
 > Paisa is independent. It is not affiliated with or endorsed by any government, ministry or political party.
 
 ## What it covers today
@@ -41,6 +43,7 @@ npm run dev            # http://127.0.0.1:3000
 npm run update         # fetch → save → read → check → publish (needs internet)
 npm run check          # lint, typecheck, tests, build
 npm run build:static   # static site in apps/web/out (what GitHub Pages serves)
+npm run test:browser   # browser tests against that build (first time: npx playwright install chromium)
 ```
 
 Other commands: `npm run ingest` (rebuild from saved snapshots, offline), `node --import tsx scripts/import-rbi.ts` (after placing RBI files in `data/inbox/`), `node --import tsx scripts/import-projects.ts`, `node --import tsx scripts/import-contracts.ts`, `npm run api` (optional standalone read API server).

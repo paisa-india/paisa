@@ -88,5 +88,5 @@ export const geographies:Geography[]=[
  {id:'pmc',name:'Pune Municipal Corporation',nameHi:'पुणे महानगरपालिका',type:'ulb',parentId:'pune-urban',officialCode:null,codeSystem:null}
 ];
 export const SIGNAL_DISCLAIMER='Automated signal generated from public data. This does not establish wrongdoing, waste or corruption.';
-export const TAX_DISCLAIMER='This is an illustrative proportional representation of government expenditure. Individual tax payments are pooled and cannot generally be traced to a specific project or expenditure.';
+export const TAX_DISCLAIMER='If your amount followed the Union government’s spending proportions, this is how it would split. It is an illustration, not a trace: taxes go into a common pool, so no one’s tax can be followed to a particular project, payment or lender. State and city taxes fund state and city budgets, not only the Union budget.';
 export const NO_DATA='Paisa does not currently have authoritative public data for this question.';

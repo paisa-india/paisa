@@ -1,6 +1,8 @@
 import type {Contract,ContractsFile,ProjectsFile} from '../schema/index';
 import {evaluate,type Signal} from './index';
-export type LiveSignal=Signal&{id:string;subject:{type:'contract'|'contractor'|'project';id:string;label:string;buyer:string}};
+import {fiscalYearOf} from '../calculations/index';
+/** `set` names the comparison set (department and fiscal year) so the site can list exactly the awards in it. */
+export type LiveSignal=Signal&{id:string;subject:{type:'contract'|'contractor'|'project';id:string;label:string;buyer:string};set?:{buyer:string;fy:string}};
 /** Real, reproducible signals from published contract awards. Values only from awards that passed the estimate check. */
 export function contractSignals(file:ContractsFile):LiveSignal[]{
  const base={source:`${file.source.title} · ${file.source.datasetVersion}`,generatedAt:file.publishedAt,comparable:true};
@@ -10,14 +12,16 @@ export function contractSignals(file:ContractsFile):LiveSignal[]{
   const s=evaluate({...base,period:`Tender published ${c.tenderPublished??'(date not published)'}`,kind:'low-bids',bidCount:c.bidders,qualifiedBidCount:null});
   if(s)out.push({...s,id:`low-bids:${c.id}`,subject:{type:'contract',id:c.id,label:c.title,buyer:c.buyer}});
  }
- const byBuyer=new Map<string,Contract[]>();for(const c of file.contracts)if(c.valueCheck==='plausible'){const l=byBuyer.get(c.buyer)??[];l.push(c);byBuyer.set(c.buyer,l);}
- for(const [buyer,list] of byBuyer){
+ // Concentration is measured within one department and one fiscal year (by tender date), so a supplier's share is compared
+ // with awards made in the same year. Awards without a tender date can't be placed in a year and are left out.
+ const sets=new Map<string,{buyer:string;fy:string;list:Contract[]}>();
+ for(const c of file.contracts){const fy=fiscalYearOf(c.tenderPublished);if(c.valueCheck!=='plausible'||!fy)continue;const k=`${c.buyer}\u0000${fy}`;const set=sets.get(k)??{buyer:c.buyer,fy,list:[]};set.list.push(c);sets.set(k,set);}
+ for(const {buyer,fy,list} of sets.values()){
   const total=list.reduce((a,c)=>a+BigInt(c.awardPaise),0n);const per=new Map<string,{name:string;paise:bigint}>();
   for(const c of list){const p=per.get(c.contractorId)??{name:c.contractorName,paise:0n};p.paise+=BigInt(c.awardPaise);per.set(c.contractorId,p);}
-  const years=[...new Set(list.map(c=>c.tenderPublished?.slice(0,4)).filter(Boolean))].sort();
   for(const [id,p] of per){
-   const s=evaluate({...base,period:`All published awards ${years[0]}–${years.at(-1)}`,kind:'concentration',supplierRupees:(p.paise/100n).toString(),totalRupees:(total/100n).toString(),contractCount:list.length,comparisonSet:`${buyer} · all checked awards in the dataset`});
-   if(s)out.push({...s,id:`concentration:${buyer}:${id}`,subject:{type:'contractor',id,label:p.name,buyer}});
+   const s=evaluate({...base,period:`Fiscal year ${fy} (by tender date)`,kind:'concentration',supplierRupees:(p.paise/100n).toString(),totalRupees:(total/100n).toString(),contractCount:list.length,comparisonSet:`${buyer} · FY ${fy} · checked awards`});
+   if(s)out.push({...s,id:`concentration:${buyer}:${fy}:${id}`,subject:{type:'contractor',id,label:p.name,buyer},set:{buyer,fy}});
   }
  }
  return out;

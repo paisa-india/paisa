@@ -6,8 +6,9 @@ import {mkdir,writeFile,copyFile,readFile} from 'node:fs/promises';
 import type {CitiesFile,City} from '../connectors/cityfinance/index';
 import {shardOf,DETAIL_SHARDS,CHECKS,type ContractColumns} from '../packages/query/shard';
 import path from 'node:path';
-import {readDataset,readContracts,readProjects,readHealth} from '../packages/db/repository';
-import {buildSignals} from '../apps/api/service';
+import {readDataset,readContracts,readProjects} from '../packages/db/repository';
+import {buildSignals,buildStatus} from '../apps/api/service';
+import {geographies} from '../packages/schema/index';
 const out=path.resolve('apps/web/public/data');await mkdir(out,{recursive:true});
 const write=async(name:string,value:unknown)=>{await writeFile(path.join(out,name),JSON.stringify(value));};
 const dataset=await readDataset();const contracts=await readContracts();const projects=await readProjects();const signals=await buildSignals();
@@ -18,9 +19,13 @@ try{
  const latest=(c:City)=>{const y=Object.keys(c.years).sort().at(-1);return y?{y,ti:c.years[y].ti,te:c.years[y].te}:null;};
  const index=cf.cities.filter(c=>c.lat!==null).map(c=>({id:c.id,n:c.name,s:c.stateId,lat:c.lat,lng:c.lng,p:c.population,t:c.type,ys:Object.keys(c.years).length,l:latest(c)}));
  await write('cities-index.json',{source:cf.source,cities:index});
+ // City search: every city's name and state, in columns (loaded only when someone starts typing).
+ const named=cf.cities.filter(c=>c.stateId);
+ await write('cities-names.json',{id:named.map(c=>c.id),n:named.map(c=>c.name),s:named.map(c=>c.stateId),ys:named.map(c=>Object.keys(c.years).length),p:named.map(c=>c.population??0)});
  // The India view shows only big cities with accounts; each state's full list loads with that state.
  await write('cities-major.json',{cities:index.filter(c=>c.ys>0&&(c.p??0)>=1000000)});
- const byState=new Map<string,City[]>();for(const c of cf.cities){if(!c.stateId)continue;const l=byState.get(c.stateId)??[];l.push(c);byState.set(c.stateId,l);}
+ // Every state gets a file (empty when cityfinance lists no city there), so a missing file always means a failed download.
+ const byState=new Map<string,City[]>(geographies.filter(g=>g.parentId==='india').map(g=>[g.id,[]]));for(const c of cf.cities){if(!c.stateId)continue;const l=byState.get(c.stateId)??[];l.push(c);byState.set(c.stateId,l);}
  // Per state: a light list for the map dots, and the yearly accounts in 8 small files loaded when a city is opened.
  for(const [s,list] of byState){
   await write(`cities/${s}.json`,{source:cf.source,cities:list.map(({years,...c})=>({...c,years:{},ys:Object.keys(years).length}))});
@@ -44,17 +49,14 @@ if(contracts){
 }
 if(projects){
  const {validations:_v,...lean}=projects;await write('projects.json',lean);
- // One file per state, so opening a state downloads only its projects.
- await mkdir(path.join(out,'projects'),{recursive:true});const states=new Set(projects.projects.flatMap(p=>p.geographyIds));
+ // One file per state, so opening a state downloads only its projects. States without projects get an empty file,
+ // so "none listed" is a real answer rather than a failed download.
+ await mkdir(path.join(out,'projects'),{recursive:true});const states=new Set([...geographies.filter(g=>g.parentId==='india').map(g=>g.id),...projects.projects.flatMap(p=>p.geographyIds)]);
  for(const s of states)await write(`projects/${s}.json`,{...lean,projects:projects.projects.filter(p=>p.geographyIds.includes(s))});
 }
 if(signals)await write('signals.json',signals);
-const health=async(id:string)=>({id,...await readHealth(id)});
-await write('status.json',{generatedAt:new Date().toISOString(),connectors:[await health('union-budget'),await health('cga'),await health('pmc-accounts'),
- {id:'mospi-projects',status:projects?'healthy':'not-connected',lastSuccess:projects?.source.retrievedAt??null},{id:'assam-contracts',status:contracts?'healthy':'not-connected',lastSuccess:contracts?.source.retrievedAt??null},
- {id:'rbi-state-finances',status:dataset.shares?.length?'healthy':'not-connected',lastSuccess:dataset.sources.find(s=>s.id==='rbi-sf-2025-26-st33')?.retrievedAt??null,mode:'manual annual download'},
- ...['cbdt','city-finance','data-gov-in','cppp','cag'].map(id=>({id,status:'not-connected',lastSuccess:null}))]});
+await write('status.json',await buildStatus());
 await write('index.json',{about:'Paisa static data. Read-only, regenerated on every data update. Each file carries its sources; see /sources on the site.',files:{
  'published.json':'National, state (RBI shares) and Pune figures with provenance and validations','projects.json':'MoSPI central projects ₹150 crore+','contracts.json':'Assam contract awards and contractor profiles (ODbL)',
- 'signals.json':'Automated signals with rule, inputs and limitations','cities-index.json':'Cities with location and latest totals (cityfinance.in)','cities/<state>.json':'Each city’s standardised income & expenditure by year','status.json':'Connector health'},generatedAt:new Date().toISOString(),publishedAt:dataset.publishedAt});
+ 'signals.json':'Automated signals with rule, inputs and limitations','cities-index.json':'Cities with location and latest totals (cityfinance.in)','cities-names.json':'City names and states, for search','cities/<state>.json':'Each city’s standardised income & expenditure by year','status.json':'Connector health'},generatedAt:new Date().toISOString(),publishedAt:dataset.publishedAt});
 console.log('Static data written to',out);

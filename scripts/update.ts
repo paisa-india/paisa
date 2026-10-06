@@ -38,11 +38,12 @@ const changed=strip(previous)!==strip(next);
 if(!changed)await writeFile(path.join(data,'published.json'),previousText);
 // Reminders for sources that cannot be fetched by scripts.
 const rbi=next.sources.find(s=>s.id==='rbi-sf-2025-26-st33');
-const reminders:string[]=[];
+// Each reminder becomes its own GitHub issue (file name = one issue per source and period).
+const reminders:{file:string;title:string;text:string}[]=[];
 // MoSPI publishes around the 25th for the month before last; remind if we are more than ~2 months behind.
-if(projectsNote&&next.projectsSummary){const [y,m]=next.projectsSummary.reportMonth.split('-').map(Number);const behind=(now.getUTCFullYear()-y)*12+(now.getUTCMonth()+1-m);if(behind>2)reminders.push(`MoSPI Flash Report: Paisa has ${next.projectsSummary.reportMonth}. ${projectsNote}`);}
+if(projectsNote&&next.projectsSummary){const [y,m]=next.projectsSummary.reportMonth.split('-').map(Number);const behind=(now.getUTCFullYear()-y)*12+(now.getUTCMonth()+1-m);if(behind>2)reminders.push({file:`reminder-mospi-${next.projectsSummary.reportMonth}.md`,title:'Manual check needed: newer MoSPI Flash Report',text:`MoSPI Flash Report: Paisa has ${next.projectsSummary.reportMonth}. ${projectsNote}`});}
 if(rbi&&now.getUTCMonth()<=2&&!next.sources.some(s=>s.id.startsWith(`rbi-sf-${now.getUTCFullYear()}-`)))
- reminders.push(`RBI "State Finances: A Study of Budgets" for ${now.getUTCFullYear()}-${String(now.getUTCFullYear()+1).slice(2)} is usually published around January. When it appears, download Statements 33 and 34 (XLSX) from https://rbi.org.in/Scripts/AnnualPublications.aspx?head=State+Finances+%3A+A+Study+of+Budgets into data/inbox/, update the file names in connectors/rbi-state-finances/index.ts, then run scripts/import-rbi.ts and npm run ingest.`);
+ reminders.push({file:`reminder-rbi-${now.getUTCFullYear()}.md`,title:'Manual download needed: RBI State Finances',text:`RBI "State Finances: A Study of Budgets" for ${now.getUTCFullYear()}-${String(now.getUTCFullYear()+1).slice(2)} is usually published around January. When it appears, download Statements 33 and 34 (XLSX) from https://rbi.org.in/Scripts/AnnualPublications.aspx?head=State+Finances+%3A+A+Study+of+Budgets into data/inbox/, update the file names in connectors/rbi-state-finances/index.ts, then run scripts/import-rbi.ts and npm run ingest.`});
 // Plain-language change summary built only from published records.
 const lines:string[]=[`# Paisa data update · ${day}`,''];
 if(changed){
@@ -56,12 +57,12 @@ if(changed){
  if(added.length+revised.length>60)lines.push(`- …and ${added.length+revised.length-60} more.`);
 }else lines.push('No published figures changed.');
 lines.push('','## Connectors',...results.map(r=>`- ${r.ok?'✅':'⚠️'} ${r.connector}: ${r.ok?'ok':r.message}`));
-if(reminders.length)lines.push('','## Needs a person',...reminders.map(r=>`- ${r}`));
+if(reminders.length)lines.push('','## Needs a person',...reminders.map(r=>`- ${r.text}`));
 lines.push('','Every figure above comes from published, validated records. Nothing here is an estimate.');
 const summary=lines.join('\n')+'\n';
 if(changed)await writeFile(path.join(data,'changes',`${day}.md`),summary);
 await writeFile(path.join(data,'alerts','last-run-summary.md'),summary);
-for(const r of reminders)await writeFile(path.join(data,'alerts',`reminder-rbi-${now.getUTCFullYear()}.md`),`# Manual download needed: RBI State Finances\n\n${r}\n`);
+for(const r of reminders)await writeFile(path.join(data,'alerts',r.file),`# ${r.title}\n\n${r.text}\n`);
 const newAlerts=(await readdir(path.join(data,'alerts'))).filter(f=>!alertsBefore.has(f)&&f!=='last-run-summary.md');
 console.log(summary);
 // Machine-readable outputs for the GitHub workflow.

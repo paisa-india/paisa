@@ -5,7 +5,8 @@
   "path": "data/snapshots/e91ebb861970c0c108e80dee997f0498cd8ac66c905c8d80e53a8a5c6338825a.jsonl.gz",
   "retrievedAt": "2026-10-05T20:24:33.834Z",
   "httpMetadata": {
-    "endpoint": "https://www.cityfinance.in/api/v1/dashboard/city/bs-is (one request per city)"
+    "endpoint": "https://www.cityfinance.in/api/v1/dashboard/city/bs-is (one request per city)",
+    "lastUpdated": "2024-12-11T14:29:07.352Z (2023-24)"
   },
   "datasetVersion": "cityfinance.in standardised annual accounts, FY 2015-16 to 2023-24",
   "parserVersion": "cityfinance/1.0.0",

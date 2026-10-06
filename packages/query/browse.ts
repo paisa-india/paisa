@@ -2,6 +2,7 @@
  * Pure search, filter and paging over published files. Shared by the optional API server and the static site
  * (which runs these in the browser on pre-generated JSON), so both always return identical results.
  */
+import {fiscalYearOf} from '../calculations/index';
 import type {Contract,ContractsFile,Project,ProjectsFile} from '../schema/index';
 export type Params={get(name:string):string|null};
 export const PROJECTS_COVERAGE=(month:string)=>`Central-sector infrastructure projects of ₹150 crore and above, as reported to MoSPI (Flash Report ${month}). State and city projects are not included.`;
@@ -17,7 +18,7 @@ export function queryProjects(f:ProjectsFile,p:Params){
 }
 export function queryContracts(f:ContractsFile,p:Params){
  const q=search(p);const min=p.get('minRupees');const minPaise=min&&/^\d{1,13}$/.test(min)?BigInt(min)*100n:0n;
- const rows=f.contracts.filter((c:Contract)=>(!q||c.title.toLowerCase().includes(q)||c.contractorName.toLowerCase().includes(q)||(c.location??'').toLowerCase().includes(q))&&(!p.get('buyer')||c.buyer===p.get('buyer'))&&(!p.get('contractor')||c.contractorId===p.get('contractor'))&&(p.get('single')!=='1'||c.bidders===1)&&BigInt(c.awardPaise)>=minPaise)
+ const rows=f.contracts.filter((c:Contract)=>(!q||c.title.toLowerCase().includes(q)||c.contractorName.toLowerCase().includes(q)||(c.location??'').toLowerCase().includes(q))&&(!p.get('buyer')||c.buyer===p.get('buyer'))&&(!p.get('contractor')||c.contractorId===p.get('contractor'))&&(!p.get('fy')||fiscalYearOf(c.tenderPublished)===p.get('fy'))&&(p.get('checked')!=='1'||c.valueCheck==='plausible')&&(p.get('single')!=='1'||c.bidders===1)&&BigInt(c.awardPaise)>=minPaise)
   .sort(p.get('sort')==='date'?(a,b)=>(b.tenderPublished??'').localeCompare(a.tenderPublished??''):(a,b)=>Number(BigInt(b.awardPaise)-BigInt(a.awardPaise)));
  return {coverage:CONTRACTS_COVERAGE,source:f.source,excluded:f.excluded,buyers:[...new Set(f.contracts.map(c=>c.buyer))].sort(),...paged(rows,p)};
 }
