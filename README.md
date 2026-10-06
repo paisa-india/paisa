@@ -1,5 +1,7 @@
 # Paisa
 
+![PAISA — Public money. Public knowledge.](apps/web/public/brand/social-card.png)
+
 **Public money. Public knowledge.** An independent, open-source, politically neutral way for anyone in India to follow public money: where it comes from, where it goes, what is being built, who won the contracts, and what is running late or over budget.
 
 Every number on the site comes from an official or openly licensed document and links back to it (file, page, hash and checks). Paisa never guesses a missing figure, and it never accuses anyone. Automated **signals** are observations, not findings of wrongdoing.
@@ -20,6 +22,8 @@ Every number on the site comes from an official or openly licensed document and 
 | Signals | Cost increases ≥ 25%, money far ahead of reported work, single-bid contracts, supplier concentration | Computed from the above, with rule and inputs shown |
 
 What is **not** connected yet (and shown as such on the site): actual payments to contractors, central/Maharashtra contract awards (behind CAPTCHAs), CAG audit findings (site blocks traffic from outside India), city budgets (as opposed to accounts). See [docs/limitations.md](docs/limitations.md).
+
+<p align="center"><img src="docs/images/desktop-home.png" alt="PAISA home page on a computer" width="68%"> <img src="docs/images/mobile-home.png" alt="PAISA home page on a phone" width="22%"></p>
 
 ## How it works
 
@@ -60,6 +64,10 @@ scripts/          update, import and export commands
 data/             saved source files, published data, change notes
 docs/             sources, methodology, limitations, operations, research
 ```
+
+## Brand and analytics
+
+Reusable logos, browser icons, and sharing artwork are in [`apps/web/public/brand`](apps/web/public/brand). See [brand guidelines](docs/brand.md). Optional private usage analytics is **disabled by default**; [setup and privacy details](docs/analytics.md).
 
 ## Maintainer
 

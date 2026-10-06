@@ -1293,3 +1293,8 @@
     font-size: 9px;
   }
 }
+
+/* A consistent original mark across the site, browser tabs and shared links. */
+.brand-mark { background: transparent; transform: none; width: 44px; height: 44px; flex-shrink: 0; }
+.brand-mark img { display: block; width: 44px; height: 44px; }
+.brand-dot { color: #7fa783; }

@@ -1,4 +1,5 @@
 'use client';
+import {trackUsage} from '../lib/analytics';
 import {useState} from 'react';
 import {AlertTriangle,Copy,ExternalLink,FileQuestion,Megaphone} from 'lucide-react';
 /**
@@ -26,7 +27,7 @@ export function Concern({subject:s,hi}:{subject:ConcernSubject;hi:boolean}){
   ['grievance',Megaphone,t('A service or project has a problem','किसी सेवा या परियोजना में समस्या है'),t('Draft a factual grievance for the official channel.','आधिकारिक माध्यम के लिए तथ्यात्मक शिकायत का मसौदा।')]];
  return <section className="concern" aria-labelledby="concern-title">
   <h3 id="concern-title">{t('Raise a concern','चिंता दर्ज करें')}</h3>
-  <div className="concern-options">{options.map(([k,Icon,title,sub])=>k==='data'&&!issue?null:<button key={k} aria-expanded={open===k} className={open===k?'on':''} onClick={()=>setOpen(open===k?null:k)}><Icon size={17}/><span><strong>{title}</strong><small>{sub}</small></span></button>)}</div>
+  <div className="concern-options">{options.map(([k,Icon,title,sub])=>k==='data'&&!issue?null:<button key={k} aria-expanded={open===k} className={open===k?'on':''} onClick={()=>{if(open!==k)trackUsage(k==='rti'?'rti_opened':k==='grievance'?'grievance_opened':'data_concern_opened');setOpen(open===k?null:k);}}><Icon size={17}/><span><strong>{title}</strong><small>{sub}</small></span></button>)}</div>
   {open==='data'&&issue&&<div className="concern-panel"><p>{t('This opens a public GitHub issue with the record and its source filled in. Add what looks wrong. Don’t include personal details.','इससे रिकॉर्ड और स्रोत के साथ एक सार्वजनिक GitHub issue खुलेगा। जो ग़लत लगे वह जोड़ें। निजी जानकारी न डालें।')}</p>
    <a className="primary" href={issue} target="_blank" rel="noreferrer">{t('Report to Paisa','पैसा को रिपोर्ट करें')}<ExternalLink size={15}/></a></div>}
   {open==='rti'&&<Draft hi={hi} key="rti" text={rtiDraft(s,hi)} evidence={evidence} route={s.level==='central'

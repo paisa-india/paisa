@@ -6,6 +6,7 @@ import {
   formatPaise,
   parseRupeesToPaise,
 } from "../../../packages/calculations/index";
+import {trackUsage} from '../lib/analytics';
 import BudgetLens from "./BudgetLens";
 
 export default function TaxExperience({
@@ -61,7 +62,7 @@ export default function TaxExperience({
               aria-label={t("Tax paid in rupees", "रुपयों में दिया कर")}
               inputMode="decimal"
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => {setInput(e.target.value); trackUsage('tax_used');}}
               aria-invalid={!!error}
               aria-describedby="tax-input-note"
             />
@@ -74,7 +75,7 @@ export default function TaxExperience({
               <button
                 key={n}
                 aria-pressed={input === n}
-                onClick={() => setInput(n)}
+                onClick={() => {setInput(n); trackUsage('tax_used');}}
               >
                 ₹{Number(n).toLocaleString("en-IN")}
               </button>

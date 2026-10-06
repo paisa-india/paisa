@@ -24,4 +24,4 @@ The provider adapter returns a Zod-validated constrained intent. A deterministic
 
 ## Privacy
 
-No authentication, analytics or identity inputs. My Tax amount lives in React state and never leaves the page. Language/display preferences alone use localStorage. Local fonts avoid font-provider requests. OSM maps disclose ordinary network request metadata to the tile service. Deploy a policy-compliant tile provider or self-host for production. Disable raw query logging at gateways before public deployment.
+No authentication or identity inputs. Optional Umami analytics is disabled unless configured for the exact production hostname; see [analytics.md](analytics.md). It sends only known page paths and allowlisted action names, without query strings, referrers, form values or user IDs. My Tax amount lives in React state and never leaves the page. Language/display preferences alone use localStorage. Local fonts avoid font-provider requests. The map is a pre-built SVG served with the site (DataMeet boundaries), so viewing it makes no third-party requests. Disable raw query logging at gateways before public deployment.

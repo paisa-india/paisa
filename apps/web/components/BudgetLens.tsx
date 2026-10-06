@@ -11,6 +11,7 @@ import type { MoneyRecord } from "../../../packages/schema/index";
 import { formatMoney, formatPaise } from "../../../packages/calculations/index";
 import { budgetGroups } from "../lib/budget-view";
 import { assignTiles, placeTiles } from "../lib/tiles";
+import {trackUsage} from '../lib/analytics';
 import { NATIONAL } from "../lib/meaning";
 
 /** An exact ₹100 allocation. Motion preserves tile identities across year changes. */
@@ -140,7 +141,7 @@ export default function BudgetLens({
             <button
               key={g.id}
               aria-pressed={g.id === active.id}
-              onClick={() => setSelected(g.id)}
+              onClick={() => {setSelected(g.id); trackUsage('spending_explored');}}
             >
               <i style={{ background: g.colour }} />
               <span>{hi ? g.labelHi : g.label}</span>

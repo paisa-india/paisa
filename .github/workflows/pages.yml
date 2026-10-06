@@ -29,6 +29,10 @@ jobs:
           # "/<repo>" for github.io project sites; empty with a custom domain.
           NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
           NEXT_PUBLIC_REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
+          NEXT_PUBLIC_UMAMI_SCRIPT_URL: ${{ vars.UMAMI_SCRIPT_URL }}
+          NEXT_PUBLIC_UMAMI_WEBSITE_ID: ${{ vars.UMAMI_WEBSITE_ID }}
+          NEXT_PUBLIC_ANALYTICS_HOSTNAME: ${{ vars.ANALYTICS_HOSTNAME }}
           NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
       - uses: actions/upload-pages-artifact@v3
         with: {path: apps/web/out}

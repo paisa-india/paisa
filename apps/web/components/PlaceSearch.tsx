@@ -1,4 +1,5 @@
 'use client';
+import {trackUsage} from '../lib/analytics';
 import {useId,useMemo,useState} from 'react';
 import {MapPin,Search} from 'lucide-react';
 import {loadJson} from '../lib/static-data';
@@ -32,7 +33,7 @@ export function PlaceSearch({hi,onPick,big=false}:{hi:boolean;onPick:(p:Place)=>
   // States first, then name-starts-with before name-contains, bigger places first.
   return out.sort((a,b)=>a.rank-b.rank||b.p-a.p).slice(0,8);
  },[q,names,hi]);
- const pick=(r:Result)=>{setQ('');setOpen(false);setActive(0);onPick(r.place);};
+ const pick=(r:Result)=>{trackUsage('place_selected');setQ('');setOpen(false);setActive(0);onPick(r.place);};
  const show=open&&fold(q).length>=2;
  return <div className={`place-search ${big?'big':''}`}>
   <label className="search-field"><Search size={big?19:17}/><input role="combobox" aria-expanded={show} aria-controls={`${id}-list`} aria-autocomplete="list" aria-activedescendant={show&&results[active]?`${id}-${active}`:undefined}

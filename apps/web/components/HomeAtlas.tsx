@@ -1,4 +1,5 @@
 "use client";
+import {trackUsage} from "../lib/analytics";
 import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -49,7 +50,7 @@ export default function HomeAtlas({
   const labels = Object.fromEntries(
     states.map((s) => [s.id, hi ? s.nameHi : s.name]),
   );
-  const selectState = useCallback((id: string) => setState(id), []);
+  const selectState = useCallback((id: string) => {setState(id); trackUsage('place_selected');}, []);
   const back = useCallback(() => setState(null), []);
   const openCity = useCallback(
     (id: string) => {
